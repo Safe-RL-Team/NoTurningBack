@@ -9,6 +9,7 @@ from stable_baselines3_copy.common.vec_env.base_vec_env import VecEnv
 from stable_baselines3_copy.common.vec_env.util import copy_obs_dict, dict_to_obs, obs_space_info
 from stable_baselines3_copy.common.preprocessing import is_graph_space
 
+
 class DummyVecEnv(VecEnv):
     """
     Creates a simple vectorized wrapper for multiple environments, calling each environment in sequence on the current

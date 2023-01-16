@@ -77,3 +77,11 @@ if p_thresh < 1:
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
+
+# list of total reward per episode (0 or 1)
+print(env.envs[0].all_rewards)
+# list of total spoiled grass per episode
+print(env.envs[0].all_spoiled_grass)
+# array of visits per node
+print(env.envs[0].all_positions)
+

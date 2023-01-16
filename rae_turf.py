@@ -10,6 +10,9 @@ from torch.nn import Linear
 
 from reversibility.model import ExtractorGrassland
 
+# extract: states during training, reward, spoiled grass
+# for cartpole: score, state + estimated reversibility, intrinsic reward etc.
+
 threshold = 0.8
 train_freq = 500
 log_dir = "results/turfRAE"
@@ -71,3 +74,10 @@ model.env = VecIntrinsic(model.env, feature_extractor=extractor, head=head,
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
+
+# list of total reward per episode (0 or 1)
+print(env.all_rewards)
+# list of total spoiled grass per episode
+print(env.all_spoiled_grass)
+# array of visits per node
+print(env.all_positions)

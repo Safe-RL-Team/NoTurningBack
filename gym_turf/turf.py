@@ -26,6 +26,10 @@ class TurfEnv(gym.Env):
         self.goal_reward = goal_reward
         self.grass_penalty = grass_penalty
 
+        # General
+        self.num_env_steps = 0
+        self.ruined_grasses = 0
+
         # Other Settings
         self.tiny = tiny
         self.viewer = None
@@ -46,6 +50,12 @@ class TurfEnv(gym.Env):
         else:
             raise NotImplementedError
 
+        # Data Collectors
+        self.current_rewards = []
+        self.all_rewards = []
+        self.all_spoiled_grass = []
+        self.all_positions = np.zeros_like(self.grass)
+
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
@@ -62,11 +72,19 @@ class TurfEnv(gym.Env):
         self.num_env_steps += 1
 
         moved_player, ruined_grass = self._move(action)
+        if moved_player:
+            self.all_positions[self.player_position[0], self.player_position[1]] += 1
 
         reward = (self.player_position == self.goal_position).all()
         reward = reward * self.goal_reward - self.step_penalty - self.grass_penalty * ruined_grass
 
+        self.current_rewards.append(reward)
+
         done = self._check_if_done()
+
+        if done:
+            self.all_rewards.append(np.sum(self.current_rewards))
+            self.all_spoiled_grass.append(self.ruined_grasses)
 
         # Convert the observation to RGB frame
         observation = self.render(mode=observation_mode)
@@ -125,6 +143,9 @@ class TurfEnv(gym.Env):
 
         self.num_env_steps = 0
         self.ruined_grasses = 0
+        self.current_rewards = []
+
+        self.all_positions[self.player_position[0], self.player_position[1]] += 1
 
         starting_observation = self.render(render_mode)
         return starting_observation
