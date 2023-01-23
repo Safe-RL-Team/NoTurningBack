@@ -79,3 +79,6 @@ model = PPO('MlpPolicy', env, verbose=1,
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
+
+print(env.envs[0].episode_returns)
+print(env.envs[0].episode_lengths)

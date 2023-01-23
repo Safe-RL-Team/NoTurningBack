@@ -74,3 +74,6 @@ model.env = VecIntrinsic(model.env, feature_extractor=extractor, head=head,
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
+
+print(env.episode_returns)
+print(env.episode_lengths)
