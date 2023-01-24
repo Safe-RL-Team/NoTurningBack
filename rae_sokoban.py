@@ -14,6 +14,9 @@ from torchbeast.monobeast import parser
 if __name__ == '__main__':
     flags = parser.parse_args()
     flags.env = 'Sokoban-v0'
+    flags.savedir = 'results/SokobanRAE'
+    flags.total_steps = 600000
+
     impala(flags)
     flags.mode = 'test_render'
     impala(flags)
