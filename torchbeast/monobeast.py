@@ -21,6 +21,7 @@ import time
 import timeit
 import traceback
 import typing
+import gym
 
 os.environ["OMP_NUM_THREADS"] = "1"  # Necessary for multithreading.
 
@@ -360,7 +361,7 @@ def train(flags):  # pylint: disable=too-many-branches, too-many-statements
         initial_agent_state_buffers.append(state)
 
     actor_processes = []
-    ctx = mp.get_context("fork")
+    ctx = mp.get_context("spawn")
     free_queue = ctx.SimpleQueue()
     full_queue = ctx.SimpleQueue()
 
@@ -636,14 +637,7 @@ Net = AtariNet
 
 
 def create_env(flags):
-    return atari_wrappers.wrap_pytorch(
-        atari_wrappers.wrap_deepmind(
-            atari_wrappers.make_atari(flags.env),
-            clip_rewards=False,
-            frame_stack=True,
-            scale=False,
-        )
-    )
+    return gym.make(flags.env)
 
 
 def main(flags):
