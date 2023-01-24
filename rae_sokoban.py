@@ -1,17 +1,28 @@
 import gym
+import torch
 import gym_sokoban  # https://github.com/mpSchrader/gym-sokoban
 
 import numpy as np
 
 from stable_baselines3 import PPO
 
-env = gym.make('Sokoban-v0')
+from torchbeast.monobeast import main as impala
+from torchbeast.monobeast import parser
 
-model = PPO('MlpPolicy', env, verbose=1)
-model.learn(total_timesteps=1000)
+# env = gym.make('Sokoban-v0')
 
-obs = env.reset()
-for i in range(1000):
-    action, _states = model.predict(obs)
-    obs, rewards, done, info = env.step(int(action))
-    env.render()
+if __name__ == '__main__':
+    flags = parser.parse_args()
+    flags.env = 'Sokoban-v0'
+    impala(flags)
+    flags.mode = 'test_render'
+    impala(flags)
+
+# model = PPO('MlpPolicy', env, verbose=1)
+# model.learn(total_timesteps=1000)
+
+# obs = env.reset()
+# for i in range(1000):
+#     action, _states = model.predict(obs)
+#     obs, rewards, done, info = env.step(int(action))
+#     env.render()
