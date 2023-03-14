@@ -43,7 +43,7 @@ class VecSafe(VecEnvWrapper):
     def step_async(self, actions: np.ndarray):
         actions = np.array(actions)
         with th.no_grad():
-            rev_score = self.model(th.from_numpy(self.current_obs).to(self.model.device))
+            rev_score = self.model(th.from_numpy(self.current_obs).to(self.model.device)).expand(1, -1)
         irrev_idx = rev_score[:, actions].squeeze(1) > self.threshold
         if irrev_idx.sum() > 0:
             actions[irrev_idx.cpu().numpy()] = th.argmin(rev_score[irrev_idx], axis=1).cpu().numpy()

@@ -78,7 +78,7 @@ def learn_rev_action(model, buffer, env_str='cartpole', epochs=10**5, lr=0.01, n
         model_act = GrasslandARev(obs_space, features_dim=64)
 
     elif env_str == 'frozenlake':
-        model = FrozenLakeRev()
+        model_act = FrozenLakeARev()
 
     else:
         raise NotImplementedError

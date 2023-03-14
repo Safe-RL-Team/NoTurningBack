@@ -88,9 +88,9 @@ class VecIntrinsic(VecEnvWrapper):
         self.buffer = load_from_pkl(path, self.verbose)
         assert isinstance(self.buffer, ReplayBuffer), "The replay buffer must inherit from ReplayBuffer class"
 
-
     def step_wait(self):
         observations, rewards, dones, infos = self.venv.step_wait()
+        observations = np.expand_dims(observations.astype(np.float32), axis=1)
         old_obs = self.old_obs
         self.buffer.add(old_obs, observations, self.actions, rewards, dones)
 
@@ -195,7 +195,7 @@ class VecIntrinsic(VecEnvWrapper):
         Reset all environments
         """
         obs = self.venv.reset()
-        self.old_obs = obs
+        self.old_obs = np.expand_dims(obs.astype(np.float32), axis=1)
         self.rewards = np.zeros(self.num_envs)
         self.len_episode = np.zeros(self.num_envs)
         self.queu_episode = deque(maxlen=15)

@@ -151,15 +151,15 @@ class ExtractorCartpole(nn.Module):
 class FrozenLakeRev(nn.Module):
     def __init__(self):
         super(FrozenLakeRev, self).__init__()
-        self.encoder = nn.Sequential(nn.Linear(4, 64), nn.ReLU())
+        self.encoder = nn.Sequential(nn.Linear(1, 64), nn.ReLU())
         self.head = nn.Sequential(nn.Linear(128, 1))
 
     def encode(self, x):
-        return self.encoder(x)
+        return self.encoder(x.float())
 
     def forward(self, x, y):
-        x = self.encode(x)
-        y = self.encode(y)
+        x = self.encode(x.float())
+        y = self.encode(y.float())
         out = torch.cat([x, y], axis=1)
         return self.head(out)
 
@@ -167,14 +167,14 @@ class FrozenLakeRev(nn.Module):
 class FrozenLakeARev(nn.Module):
     def __init__(self):
         super(FrozenLakeARev, self).__init__()
-        self.encoder = nn.Sequential(nn.Linear(4, 64), nn.ReLU())
-        self.head = nn.Linear(64, 2)
+        self.encoder = nn.Sequential(nn.Linear(1, 64), nn.ReLU())
+        self.head = nn.Linear(64, 4)
 
     def encode(self, x):
-        return self.encoder(x)
+        return self.encoder(x.float())
 
     def forward(self, s):
-        x = self.encode(s)
+        x = self.encode(s.float())
         out = self.head(x)
         return out
 
@@ -182,7 +182,7 @@ class FrozenLakeARev(nn.Module):
 class ExtractorFrozenLake(nn.Module):
     def __init__(self):
         super(ExtractorFrozenLake, self).__init__()
-        self.l1 = Linear(4, 64)
+        self.l1 = Linear(1, 64)
         self.l2 = Linear(64, 64)
 
     def forward(self, x):

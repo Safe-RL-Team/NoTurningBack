@@ -320,7 +320,10 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         """
         Write log.
         """
-        fps = int(self.num_timesteps / (time.time() - self.start_time))
+        if time.time() == self.start_time:
+            fps = 10000
+        else:
+            fps = int(self.num_timesteps / (time.time() - self.start_time))
         logger.record("time/episodes", self._episode_num, exclude="tensorboard")
         if len(self.ep_info_buffer) > 0 and len(self.ep_info_buffer[0]) > 0:
             logger.record("rollout/ep_rew_mean", safe_mean([ep_info["r"] for ep_info in self.ep_info_buffer]))
