@@ -20,8 +20,7 @@ import time
 
 import numpy as np
 import libtorchbeast
-from torchbeast import atari_wrappers
-
+from unused.torchbeast import atari_wrappers
 
 # yapf: disable
 parser = argparse.ArgumentParser(description='Remote Environment Server')

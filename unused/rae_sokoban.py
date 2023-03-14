@@ -1,11 +1,3 @@
-import gym
-import torch
-import gym_sokoban  # https://github.com/mpSchrader/gym-sokoban
-
-import numpy as np
-
-from stable_baselines3 import PPO
-
 from torchbeast.monobeast import main as impala
 from torchbeast.monobeast import parser
 

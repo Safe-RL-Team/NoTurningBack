@@ -30,12 +30,7 @@ from torch import multiprocessing as mp
 from torch import nn
 from torch.nn import functional as F
 
-from torchbeast import atari_wrappers
-from torchbeast.core import environment
-from torchbeast.core import file_writer
-from torchbeast.core import prof
-from torchbeast.core import vtrace
-
+from unused.torchbeast.core import vtrace, file_writer, prof, environment
 
 # yapf: disable
 parser = argparse.ArgumentParser(description="PyTorch Scalable Agent")

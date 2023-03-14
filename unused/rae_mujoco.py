@@ -18,7 +18,7 @@ from reversibility.model import ExtractorCartpole
 
 threshold = 0.8
 train_freq = 500
-log_dir = "results/mujocoRAE"
+log_dir = "../results/mujocoRAE"
 step_penalty = 0
 seed = 42
 ent_coef = 0.05

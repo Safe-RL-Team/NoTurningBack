@@ -26,9 +26,7 @@ import torch
 import libtorchbeast
 from torch import nn
 from torch.nn import functional as F
-from torchbeast.core import file_writer
-from torchbeast.core import vtrace
-
+from unused.torchbeast.core import vtrace, file_writer
 
 # Necessary for multithreading.
 os.environ["OMP_NUM_THREADS"] = "1"

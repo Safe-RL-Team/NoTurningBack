@@ -19,7 +19,7 @@ torch.manual_seed(seed)
 
 p_thresh = 0.7
 
-log_dir = "results/CartpoleRAC"
+log_dir = "results/FrozenLakeRAC"
 
 n_traj_classifier = 10 ** 4
 dataset_classifier = 10 ** 2
@@ -37,6 +37,7 @@ os.makedirs(log_dir, exist_ok=True)
 if model_act is None:
     print("Training psi")
     model, buffer = learn_rev_classifier(n_traj=n_traj_classifier,
+                                         env_str='frozenlake',
                                          dataset_size=dataset_classifier,
                                          epochs=epoch_classifier,
                                          lr=lr_classifier,
@@ -47,6 +48,7 @@ if model_act is None:
     print("Training phi")
     model_act = learn_rev_action(model=model,
                                  buffer=buffer,
+                                 env_str='frozenlake',
                                  epochs=steps_action_model,
                                  lr=lr_classifier,
                                  no_cuda=no_cuda,
@@ -60,7 +62,7 @@ else:
 
 model_act.device = "cuda"
 
-env = gym.make('CartPole-v0')
+env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=True)
 env.seed(seed)
 env._max_episode_steps = max_steps
 env = Monitor(env, os.path.join(log_dir, 'exp_{}'.format(seed)))

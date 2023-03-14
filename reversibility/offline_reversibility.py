@@ -4,7 +4,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 import torch as th
-from reversibility.model import CartpoleRev, CartpoleARev, GrasslandRev, GrasslandARev
+from reversibility.model import CartpoleRev, CartpoleARev, GrasslandRev, GrasslandARev, FrozenLakeRev, FrozenLakeARev
 from reversibility.utils import buff_to_dataset, binary_acc
 from reversibility.utils import generate_buffer
 
@@ -20,6 +20,9 @@ def learn_rev_classifier(n_traj, env_str='cartpole', w_max=200, dataset_size=10*
     elif env_str == 'turf':
         obs_space = Box(0, 255, (3, 10, 10), np.uint8)
         model = GrasslandRev(observation_space=obs_space, features_dim=64)
+
+    elif env_str == 'frozenlake':
+        model = FrozenLakeRev()
 
     else:
         raise NotImplementedError
@@ -73,6 +76,9 @@ def learn_rev_action(model, buffer, env_str='cartpole', epochs=10**5, lr=0.01, n
     elif env_str == 'turf':
         obs_space = Box(0, 255, (3, 10, 10), np.uint8)
         model_act = GrasslandARev(obs_space, features_dim=64)
+
+    elif env_str == 'frozenlake':
+        model = FrozenLakeRev()
 
     else:
         raise NotImplementedError

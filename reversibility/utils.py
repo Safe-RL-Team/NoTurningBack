@@ -14,6 +14,7 @@ from stable_baselines3_copy.common import set_random_seed
 from stable_baselines3_copy.dqn.policies import CnnPolicy
 from gym_turf import TurfEnv
 
+
 def buff_to_action_dataset(buffer, batch_size):
     replay_data = buffer.sample(batch_size)
     return replay_data
@@ -75,9 +76,25 @@ def generate_buffer(size, env_name='cartpole', seed=42):
                     )
         model.learn(total_timesteps=size)
 
-
     elif env_name == 'cartpole':
         env = gym.make('CartPole-v0')
+        env.seed(seed)
+        set_random_seed(seed)
+        model = DQN('MlpPolicy', env, verbose=1,
+                    buffer_size=size,
+                    learning_starts=size,
+                    learning_rate=0.0001,
+                    target_update_interval=50,
+                    exploration_fraction=0.1,
+                    exploration_initial_eps=1,
+                    exploration_final_eps=1,
+                    batch_size=32,
+                    seed=seed,
+                    )
+        model.learn(total_timesteps=size)
+
+    elif env_name == 'frozenlake':
+        env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=True)
         env.seed(seed)
         set_random_seed(seed)
         model = DQN('MlpPolicy', env, verbose=1,

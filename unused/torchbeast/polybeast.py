@@ -17,8 +17,7 @@ import multiprocessing as mp
 
 import numpy as np
 
-from torchbeast import polybeast_learner
-from torchbeast import polybeast_env
+from unused.torchbeast import polybeast_learner, polybeast_env
 
 
 def run_env(flags, actor_id):

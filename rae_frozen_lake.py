@@ -8,14 +8,11 @@ from stable_baselines3_copy.common.vec_env.vec_intrisinc_reward import VecIntrin
 import torch
 from torch.nn import Linear
 
-from reversibility.model import ExtractorCartpole
-
-# extract: states during training, reward, spoiled grass
-# for cartpole: score, state + estimated reversibility, intrinsic reward etc.
+from reversibility.model import ExtractorFrozenLake
 
 threshold = 0.8
 train_freq = 500
-log_dir = "results/CartpoleRAE"
+log_dir = "results/FrozenLakeRAE"
 step_penalty = 0
 seed = 42
 ent_coef = 0.05
@@ -43,14 +40,14 @@ def func(x):
     return (x > threshold) * (x - threshold)
 
 
-env = gym.make('CartPole-v0')
+env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=True)
 env = Monitor(env, os.path.join(log_dir, 'exp'))
 env.seed(seed)
 
 model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=log_dir, clip_range_vf=None, ent_coef=ent_coef)
 
 head = Linear(2 * 64, 1)
-extractor = ExtractorCartpole()
+extractor = ExtractorFrozenLake()
 if use_gpu:
     head = head.cuda()
     extractor = extractor.cuda()

@@ -3,7 +3,7 @@ import numpy as np
 import gym
 
 from stable_baselines3_copy import PPO
-from stable_baselines3.common.monitor import Monitor
+from stable_baselines3_copy.common.monitor import Monitor
 from stable_baselines3_copy.common.vec_env.vec_intrisinc_reward import VecIntrinsic
 import torch
 from torch.nn import Linear
