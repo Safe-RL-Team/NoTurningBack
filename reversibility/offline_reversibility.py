@@ -10,7 +10,7 @@ from reversibility.utils import generate_buffer
 
 
 def learn_rev_classifier(n_traj, env_str='cartpole', w_max=200, dataset_size=10**4, epochs=100, lr=0.01, seed=42,
-                         no_cuda=False, verbose=0):
+                         no_cuda=False, verbose=0, slippery=True):
 
     criterion = torch.nn.BCEWithLogitsLoss()
 
@@ -31,7 +31,7 @@ def learn_rev_classifier(n_traj, env_str='cartpole', w_max=200, dataset_size=10*
     if use_gpu:
         model.cuda()
 
-    buffer = generate_buffer(n_traj, seed=seed, env_name=env_str)
+    buffer = generate_buffer(n_traj, seed=seed, env_name=env_str, slippery=slippery)
 
     optimizer = Adam(model.parameters(), lr=lr)
 

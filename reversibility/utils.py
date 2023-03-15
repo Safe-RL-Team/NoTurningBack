@@ -56,7 +56,7 @@ def binary_acc(y_pred, y_test):
     return acc
 
 
-def generate_buffer(size, env_name='cartpole', seed=42):
+def generate_buffer(size, env_name='cartpole', seed=42, slippery=True):
     np.random.seed(seed)
 
     if env_name == "turf":
@@ -94,7 +94,7 @@ def generate_buffer(size, env_name='cartpole', seed=42):
         model.learn(total_timesteps=size)
 
     elif env_name == 'frozenlake':
-        env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=True)
+        env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=slippery)
         env.seed(seed)
         set_random_seed(seed)
         model = DQN('MlpPolicy', env, verbose=1,

@@ -20,6 +20,8 @@ torch.manual_seed(seed)
 p_thresh = 0.7
 
 log_dir = "results/FrozenLakeRAC"
+slippery_training = False
+slippery_testing = False
 
 n_traj_classifier = 10 ** 4
 dataset_classifier = 10 ** 2
@@ -42,7 +44,8 @@ if model_act is None:
                                          epochs=epoch_classifier,
                                          lr=lr_classifier,
                                          no_cuda=no_cuda,
-                                         verbose=verbose)
+                                         verbose=verbose,
+                                         slippery=slippery_training)
 
     print("Done!")
     print("Training phi")
@@ -62,7 +65,7 @@ else:
 
 model_act.device = "cuda"
 
-env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=True)
+env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=slippery_testing)
 env.seed(seed)
 env._max_episode_steps = max_steps
 env = Monitor(env, os.path.join(log_dir, 'exp_{}'.format(seed)))
