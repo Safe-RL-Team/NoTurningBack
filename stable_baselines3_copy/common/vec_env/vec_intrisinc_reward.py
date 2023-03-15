@@ -90,7 +90,8 @@ class VecIntrinsic(VecEnvWrapper):
 
     def step_wait(self):
         observations, rewards, dones, infos = self.venv.step_wait()
-        observations = np.expand_dims(observations.astype(np.float32), axis=1)
+        if len(observations.shape) == 1:
+            observations = np.expand_dims(observations.astype(np.float32), axis=0)
         old_obs = self.old_obs
         self.buffer.add(old_obs, observations, self.actions, rewards, dones)
 
@@ -195,7 +196,10 @@ class VecIntrinsic(VecEnvWrapper):
         Reset all environments
         """
         obs = self.venv.reset()
-        self.old_obs = np.expand_dims(obs.astype(np.float32), axis=1)
+        if len(obs.shape) == 1:
+            self.old_obs = np.expand_dims(obs.astype(np.float32), axis=0)
+        else:
+            self.old_obs = obs.astype(np.float32)
         self.rewards = np.zeros(self.num_envs)
         self.len_episode = np.zeros(self.num_envs)
         self.queu_episode = deque(maxlen=15)
