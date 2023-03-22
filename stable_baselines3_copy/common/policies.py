@@ -94,7 +94,7 @@ class BaseModel(nn.Module, ABC):
 
     def _get_data(self) -> Dict[str, Any]:
         """
-        Get data that need to be saved in order to re-create the model.
+        Get data.csv.csv that need to be saved in order to re-create the model.
         This corresponds to the arguments of the constructor.
 
         :return: (Dict[str, Any])
@@ -124,7 +124,7 @@ class BaseModel(nn.Module, ABC):
 
         :param path: (str)
         """
-        th.save({"state_dict": self.state_dict(), "data": self._get_data()}, path)
+        th.save({"state_dict": self.state_dict(), "data.csv.csv": self._get_data()}, path)
 
     @classmethod
     def load(cls, path: str, device: Union[th.device, str] = "auto") -> "BaseModel":
@@ -138,7 +138,7 @@ class BaseModel(nn.Module, ABC):
         device = get_device(device)
         saved_variables = th.load(path, map_location=device)
         # Create policy object
-        model = cls(**saved_variables["data"])  # pytype: disable=not-instantiable
+        model = cls(**saved_variables["data.csv.csv"])  # pytype: disable=not-instantiable
         # Load weights
         model.load_state_dict(saved_variables["state_dict"])
         model.to(device)
@@ -190,7 +190,7 @@ class BasePolicy(BaseModel):
     @staticmethod
     def init_weights(module: nn.Module, gain: float = 1) -> None:
         """
-        Orthogonal initialization (used in PPO and A2C)
+        Orthogonal initialization (used in ppo and A2C)
         """
         if isinstance(module, (nn.Linear, nn.Conv2d)):
             nn.init.orthogonal_(module.weight, gain=gain)
@@ -303,7 +303,7 @@ class BasePolicy(BaseModel):
 class ActorCriticPolicy(BasePolicy):
     """
     Policy class for actor-critic algorithms (has both policy and value prediction).
-    Used by A2C, PPO and the likes.
+    Used by A2C, ppo and the likes.
 
     :param observation_space: (gym.spaces.Space) Observation space
     :param action_space: (gym.spaces.Space) Action space
@@ -592,7 +592,7 @@ class ActorCriticPolicy(BasePolicy):
 class ActorCriticCnnPolicy(ActorCriticPolicy):
     """
     CNN policy class for actor-critic algorithms (has both policy and value prediction).
-    Used by A2C, PPO and the likes.
+    Used by A2C, ppo and the likes.
 
     :param observation_space: (gym.spaces.Space) Observation space
     :param action_space: (gym.spaces.Space) Action space
@@ -668,7 +668,7 @@ class ContinuousCritic(BaseModel):
     """
     Critic network(s) for DDPG/SAC/TD3.
     It represents the action-state value function (Q-value function).
-    Compared to A2C/PPO critics, this one represents the Q-value
+    Compared to A2C/ppo critics, this one represents the Q-value
     and takes the continuous action as input. It is concatenated with the state
     and then fed to the network which outputs a single value: Q(s, a).
     For more recent algorithms like SAC/TD3, multiple networks

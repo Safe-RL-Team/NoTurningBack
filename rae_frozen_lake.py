@@ -1,6 +1,8 @@
 import os
 import numpy as np
 import gym
+import pandas as pd
+import matplotlib.pyplot as plt
 
 from stable_baselines3_copy import PPO
 from stable_baselines3_copy.common.monitor import Monitor
@@ -10,23 +12,52 @@ from torch.nn import Linear
 
 from reversibility.model import ExtractorFrozenLake
 
+five = [
+    "SFFFH",
+    "FFHFF",
+    "HFFFH",
+    "FFHFF",
+    "HFFFG"
+    ]
+
+ten = [
+    "SFFFHFFFHF",
+    "FFHFFFHFFF",
+    "HFFFHFFFHF",
+    "FFHFFFHFFF",
+    "HFFFHFFFHF",
+    "FFHFFFHFFF",
+    "HFFFHFFFHF",
+    "FFHFFFHFFF",
+    "HFFFHFFFHF",
+    "FFHFFFHFFG"
+]
+suicide_test = [
+    "SFFFG",
+    "FFFFF",
+    "FFFFF",
+    "FFFFF",
+    "HFFFF"
+    ]
+
 threshold = 0.8
 train_freq = 500
 log_dir = "results/FrozenLakeRAE"
-slippery = False
+slippery = True
 
 step_penalty = 0
 seed = 42
 ent_coef = 0.05
+lr = 0.01
 
-gradient_step = 10
+gradient_step = 1
 learning_start = 0
 batch_size = 128
-buffer_size = 2000
+buffer_size = 10 ** 6
 d_min = 0
-d_max = 100
+d_max = 50000
 reward_free = False
-time_steps = 10 ** 4
+time_steps = 5e5
 
 
 use_gpu = torch.cuda.is_available()
@@ -68,11 +99,21 @@ model.env = VecIntrinsic(model.env, feature_extractor=extractor, head=head,
                          d_max=d_max,
                          reward_free=reward_free,
                          save_path=log_dir,
+                         lr=lr
                          )
 
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
 
-print(env.episode_returns)
-print(env.episode_lengths)
+positions = np.zeros((4, 4))
+for pos in np.array(model.env.obs_recording):
+    positions[int(pos / 4), int(pos % 4)] += 1
+
+np.savetxt(log_dir + '/all_positions.txt', positions, fmt='%d')
+data = pd.DataFrame({'eps_rewards': env.episode_rewards})
+data.to_csv(log_dir + '/data.csv')
+
+print(positions)
+plt.plot(env.episode_rewards)
+plt.show()

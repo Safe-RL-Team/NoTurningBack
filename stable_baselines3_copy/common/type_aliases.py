@@ -8,7 +8,7 @@ import torch as th
 
 from stable_baselines3_copy.common.callbacks import BaseCallback
 from stable_baselines3_copy.common.vec_env import VecEnv
-# from torch_geometric.data import Batch
+# from torch_geometric.data.csv.csv import Batch
 
 GymEnv = Union[gym.Env, VecEnv]
 GymObs = Union[Tuple, Dict[str, Any], np.ndarray, int]

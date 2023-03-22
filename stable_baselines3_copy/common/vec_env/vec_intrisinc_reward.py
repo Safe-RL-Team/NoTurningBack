@@ -15,6 +15,7 @@ from stable_baselines3_copy.common.running_mean_std import RunningMeanStd
 from stable_baselines3_copy.common.vec_env.base_vec_env import VecEnv, VecEnvWrapper
 from stable_baselines3_copy.common.buffers import ReplayBuffer
 
+
 class VecIntrinsic(VecEnvWrapper):
     """
     An environment to compute and use intrisinc reward
@@ -68,6 +69,8 @@ class VecIntrinsic(VecEnvWrapper):
         self.len_episode = np.zeros(self.num_envs)
         self.queu_episode = deque(maxlen=15)
         self.is_saved = False
+        self.reward_recording = []
+        self.obs_recording = []
 
     def save_replay_buffer(self, path: Union[str, pathlib.Path, io.BufferedIOBase]) -> None:
         """
@@ -92,6 +95,10 @@ class VecIntrinsic(VecEnvWrapper):
         observations, rewards, dones, infos = self.venv.step_wait()
         if len(observations.shape) == 1:
             observations = np.expand_dims(observations.astype(np.float32), axis=0)
+        if dones[0]:
+            self.obs_recording.append(infos[0]['terminal_observation'])
+        else:
+            self.obs_recording.append(observations[0, 0])
         old_obs = self.old_obs
         self.buffer.add(old_obs, observations, self.actions, rewards, dones)
 
@@ -141,6 +148,7 @@ class VecIntrinsic(VecEnvWrapper):
             if done:
                 logger.record("intrinsic/reward_episode", self.rewards[i])
                 self.queu_episode.append(self.len_episode[i])
+                self.reward_recording.append(self.rewards[i])
                 self.len_episode[i] = 0
                 self.rewards[i] = 0
 

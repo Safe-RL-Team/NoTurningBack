@@ -2,7 +2,7 @@ from torchbeast.monobeast import main as impala
 from torchbeast.monobeast import parser
 
 # env = gym.make('Sokoban-v0')
-# model = PPO('MlpPolicy', env, verbose=1)
+# model = ppo('MlpPolicy', env, verbose=1)
 # model.learn(total_timesteps=1000)
 
 # obs = env.reset()

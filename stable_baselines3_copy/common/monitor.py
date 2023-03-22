@@ -14,7 +14,7 @@ import pandas as pd
 
 class Monitor(gym.Wrapper):
     """
-    A monitor wrapper for Gym environments, it is used to know the episode reward, length, time and other data.
+    A monitor wrapper for Gym environments, it is used to know the episode reward, length, time and other data.csv.csv.
 
     :param env: (gym.Env) The environment
     :param filename: (Optional[str]) the location to save a log file, can be None for no log
@@ -176,7 +176,7 @@ def load_results(path: str) -> pandas.DataFrame:
     Load all Monitor logs from a given directory path matching ``*monitor.csv``
 
     :param path: (str) the directory path containing the log file(s)
-    :return: (pandas.DataFrame) the logged data
+    :return: (pandas.DataFrame) the logged data.csv.csv
     """
     monitor_files = get_monitor_files(path)
     if len(monitor_files) == 0:
@@ -202,7 +202,7 @@ def load_results_several_seed(path: str, interval=100) -> pandas.DataFrame:
     Load all Monitor logs from a given directory path matching ``*monitor.csv``
 
     :param path: (str) the directory path containing the log file(s)
-    :return: (pandas.DataFrame) the logged data
+    :return: (pandas.DataFrame) the logged data.csv.csv
     """
     monitor_files = get_monitor_files(path)
     if len(monitor_files) == 0:

@@ -46,9 +46,9 @@ def window_func(var_1: np.ndarray, var_2: np.ndarray, window: int, func: Callabl
 
 def ts2xy(data_frame: pd.DataFrame, x_axis: str) -> Tuple[np.ndarray, np.ndarray]:
     """
-    Decompose a data frame variable to x ans ys
+    Decompose a data.csv.csv frame variable to x ans ys
 
-    :param data_frame: (pd.DataFrame) the input data
+    :param data_frame: (pd.DataFrame) the input data.csv.csv
     :param x_axis: (str) the axis for the x and y output
         (can be X_TIMESTEPS='timesteps', X_EPISODES='episodes' or X_WALLTIME='walltime_hrs')
     :return: (Tuple[np.ndarray, np.ndarray]) the x and y output

@@ -17,7 +17,7 @@ from stable_baselines3_copy.common.vec_env import VecEnv
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
-    The base for On-Policy algorithms (ex: A2C/PPO).
+    The base for On-Policy algorithms (ex: A2C/ppo).
 
     :param policy: (ActorCriticPolicy or str) The policy model to use (MlpPolicy, CnnPolicy, ...)
     :param env: (Gym environment or str) The environment to learn from (if registered in Gym, can be str)
@@ -186,7 +186,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
     def train(self) -> None:
         """
-        Consume current rollout data and update policy parameters.
+        Consume current rollout data.csv.csv and update policy parameters.
         Implemented by individual algorithms.
         """
         raise NotImplementedError

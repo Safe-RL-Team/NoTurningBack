@@ -1,5 +1,7 @@
 import os
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 from gym_turf import TurfEnv
 from stable_baselines3_copy import PPO
@@ -10,25 +12,24 @@ from torch.nn import Linear
 
 from reversibility.model import ExtractorGrassland
 
-# extract: states during training, reward, spoiled grass
-# for cartpole: score, state + estimated reversibility, intrinsic reward etc.
-
 threshold = 0.8
 train_freq = 500
 log_dir = "results/turfRAE"
 step_penalty = 0
 seed = 42
 ent_coef = 0.05
+lr = 0.01
+big = True
 
-gradient_step = 10
+gradient_step = 1
 learning_start = 0
 batch_size = 128
-buffer_size = 2000
+buffer_size = 10 ** 6
 d_min = 0
-d_max = 100
+d_max = 50000
 reward_free = False
-time_steps = 10 ** 4
-
+time_steps = 5e5
+max_steps = 480
 
 use_gpu = torch.cuda.is_available()
 wir = 0.1
@@ -43,7 +44,7 @@ def func(x):
     return (x > threshold) * (x - threshold)
 
 
-env = TurfEnv(step_penalty=step_penalty)
+env = TurfEnv(step_penalty=step_penalty, big=big, max_steps=max_steps)
 env = Monitor(env, os.path.join(log_dir, 'exp'), info_keywords=('ruined grasses',))
 env.seed(seed)
 
@@ -69,15 +70,20 @@ model.env = VecIntrinsic(model.env, feature_extractor=extractor, head=head,
                          d_max=d_max,
                          reward_free=reward_free,
                          save_path=log_dir,
+                         lr=lr
                          )
 
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
 
-# list of total reward per episode (0 or 1)
-print(env.all_rewards)
-# list of total spoiled grass per episode
-print(env.all_spoiled_grass)
-# array of visits per node
+data = pd.DataFrame({'rewards': env.all_rewards,
+                     'spoiled_grass': env.all_spoiled_grass})
+data.to_csv(log_dir + '/data.csv.csv')
+np.savetxt(log_dir + '/all_positions.txt', env.all_positions, fmt='%d')
+
+plt.plot(env.all_rewards)
+plt.show()
+plt.plot(env.all_spoiled_grass)
+plt.show()
 print(env.all_positions)

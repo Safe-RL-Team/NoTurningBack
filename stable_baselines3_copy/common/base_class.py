@@ -320,7 +320,7 @@ class BaseAlgorithm(ABC):
         """
         Load the model from a zip-file
 
-        :param load_path: the location of the saved data
+        :param load_path: the location of the saved data.csv.csv
         :param env: the new environment to run the loaded model on
             (can be None if you only need prediction from a trained model) has priority over any saved environment
         :param kwargs: extra arguments to change the model when loading
@@ -545,7 +545,7 @@ class BaseAlgorithm(ABC):
             exclude = exclude.difference(include)
 
         state_dicts_names, tensors_names = self.get_torch_variables()
-        # any params that are in the save vars must not be saved by data
+        # any params that are in the save vars must not be saved by data.csv.csv
         torch_variables = state_dicts_names + tensors_names
         for torch_var in torch_variables:
             # we need to get only the name of the top most module as we'll remove that

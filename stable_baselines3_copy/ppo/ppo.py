@@ -14,14 +14,14 @@ from stable_baselines3_copy.common.utils import explained_variance, get_schedule
 
 class PPO(OnPolicyAlgorithm):
     """
-    Proximal Policy Optimization algorithm (PPO) (clip version)
+    Proximal Policy Optimization algorithm (ppo) (clip version)
 
     Paper: https://arxiv.org/abs/1707.06347
     Code: This implementation borrows code from OpenAI Spinning Up (https://github.com/openai/spinningup/)
     https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail and
     and Stable Baselines (PPO2 from https://github.com/hill-a/stable-baselines)
 
-    Introduction to PPO: https://spinningup.openai.com/en/latest/algorithms/ppo.html
+    Introduction to ppo: https://spinningup.openai.com/en/latest/algorithms/ppo.html
 
     :param policy: (ActorCriticPolicy or str) The policy model to use (MlpPolicy, CnnPolicy, ...)
     :param env: (Gym environment or str) The environment to learn from (if registered in Gym, can be str)
@@ -247,10 +247,10 @@ class PPO(OnPolicyAlgorithm):
         eval_env: Optional[GymEnv] = None,
         eval_freq: int = -1,
         n_eval_episodes: int = 5,
-        tb_log_name: str = "PPO",
+        tb_log_name: str = "ppo",
         eval_log_path: Optional[str] = None,
         reset_num_timesteps: bool = True,
-    ) -> "PPO":
+    ) -> "ppo":
 
         return super(PPO, self).learn(
             total_timesteps=total_timesteps,

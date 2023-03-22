@@ -73,7 +73,7 @@ def update_learning_rate(optimizer: th.optim.Optimizer, learning_rate: float) ->
 
 def get_schedule_fn(value_schedule: Union[Callable, float]) -> Callable:
     """
-    Transform (if needed) learning rate and clip range (for PPO)
+    Transform (if needed) learning rate and clip range (for ppo)
     to callable.
 
     :param value_schedule: (callable or float)
@@ -307,7 +307,7 @@ def polyak_update(params: Iterable[th.nn.Parameter], target_params: Iterable[th.
             target_param.data.mul_(1 - tau)
             th.add(target_param.data, param.data, alpha=tau, out=target_param.data)
 
-# from torch_geometric.data import Batch
+# from torch_geometric.data.csv.csv import Batch
 #
 # def graph_batches_to_batch(l: list) -> Batch:
 #     complete_list = []

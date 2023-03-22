@@ -47,7 +47,7 @@ parser.add_argument("--xpid", default=None,
 parser.add_argument("--disable_checkpoint", action="store_true",
                     help="Disable saving checkpoint.")
 parser.add_argument("--savedir", default="~/logs/torchbeast",
-                    help="Root dir where experiment data will be saved.")
+                    help="Root dir where experiment data.csv.csv will be saved.")
 parser.add_argument("--num_actors", default=4, type=int, metavar="N",
                     help="Number of actors (default: 4).")
 parser.add_argument("--total_steps", default=100000, type=int, metavar="T",

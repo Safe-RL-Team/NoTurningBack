@@ -120,10 +120,10 @@ class BaseBuffer(object):
     def to_torch(self, array: np.ndarray, copy: bool = True) -> th.Tensor:
         """
         Convert a numpy array to a PyTorch tensor.
-        Note: it copies the data by default
+        Note: it copies the data.csv.csv by default
 
         :param array: (np.ndarray)
-        :param copy: (bool) Whether to copy or not the data
+        :param copy: (bool) Whether to copy or not the data.csv.csv
             (may be useful to avoid changing things be reference)
         :return: (th.Tensor)
         """
@@ -261,7 +261,7 @@ class ReplayBuffer(BaseBuffer):
 
 class RolloutBuffer(BaseBuffer):
     """
-    Rollout buffer used in on-policy algorithms like A2C/PPO.
+    Rollout buffer used in on-policy algorithms like A2C/ppo.
 
     :param buffer_size: (int) Max number of element in the buffer
     :param observation_space: (spaces.Space) Observation space
@@ -366,7 +366,7 @@ class RolloutBuffer(BaseBuffer):
     def get(self, batch_size: Optional[int] = None) -> Generator[RolloutBufferSamples, None, None]:
         assert self.full, ""
         indices = np.random.permutation(self.buffer_size * self.n_envs)
-        # Prepare the data
+        # Prepare the data.csv.csv
         if not self.generator_ready:
             for tensor in ["observations", "actions", "values", "log_probs", "advantages", "returns"]:
                 self.__dict__[tensor] = self.swap_and_flatten(self.__dict__[tensor])
@@ -393,12 +393,12 @@ class RolloutBuffer(BaseBuffer):
         return RolloutBufferSamples(*tuple(map(self.to_torch, data)))
 
 
-# from torch_geometric.data import Batch
+# from torch_geometric.data.csv.csv import Batch
 
 
 class GNNRolloutBuffer(BaseBuffer):
     """
-    Rollout buffer used in on-policy algorithms like A2C/PPO.
+    Rollout buffer used in on-policy algorithms like A2C/ppo.
 
     :param buffer_size: (int) Max number of element in the buffer
     :param observation_space: (spaces.Space) Observation space
@@ -503,7 +503,7 @@ class GNNRolloutBuffer(BaseBuffer):
     def get(self, batch_size: Optional[int] = None) -> Generator[RolloutBufferSamples, None, None]:
         assert self.full, "get from buffer wich is not full"
         indices = np.random.permutation(self.buffer_size * self.n_envs)
-        # Prepare the data
+        # Prepare the data.csv.csv
         if not self.generator_ready:
             for tensor in ["actions", "values", "log_probs", "advantages", "returns"]:
                 self.__dict__[tensor] = self.swap_and_flatten(self.__dict__[tensor])

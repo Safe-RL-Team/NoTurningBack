@@ -1,6 +1,9 @@
 import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import gym
+import pandas as pd
 
 from stable_baselines3_copy import PPO
 from stable_baselines3_copy.common.monitor import Monitor
@@ -10,28 +13,26 @@ from torch.nn import Linear
 
 from reversibility.model import ExtractorCartpole
 
-# extract: states during training, reward, spoiled grass
-# for cartpole: score, state + estimated reversibility, intrinsic reward etc.
-
-threshold = 0.8
+threshold = 0.7
 train_freq = 500
 log_dir = "results/CartpoleRAE"
 step_penalty = 0
 seed = 42
+lr = 0.01
 ent_coef = 0.05
 
-gradient_step = 10
+gradient_step = 1
 learning_start = 0
 batch_size = 128
-buffer_size = 2000
+buffer_size = 10 ** 6
 d_min = 0
-d_max = 100
-reward_free = False
-time_steps = 10 ** 4
+d_max = 50000
+reward_free = True
+time_steps = 500000
 
 
 use_gpu = torch.cuda.is_available()
-wir = 0.1
+wir = 1
 
 np.random.seed(seed)
 torch.manual_seed(seed)
@@ -60,6 +61,7 @@ extractor.train()
 model.env = VecIntrinsic(model.env, feature_extractor=extractor, head=head,
                          weight_intrinsic_reward=wir,
                          func=func,
+                         lr=lr,
                          train_freq=train_freq,
                          gradient_step=gradient_step,
                          learning_start=learning_start,
@@ -68,12 +70,17 @@ model.env = VecIntrinsic(model.env, feature_extractor=extractor, head=head,
                          d_min=d_min,
                          d_max=d_max,
                          reward_free=reward_free,
-                         save_path=log_dir,
+                         save_path=log_dir
                          )
 
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
 
-print(env.episode_returns)
-print(env.episode_lengths)
+data = pd.DataFrame({'length': env.episode_lengths, 'intrins_rew': model.env.reward_recording})
+data.to_csv(log_dir + '/data.csv')
+
+plt.plot(env.episode_rewards)
+plt.show()
+plt.plot(model.env.reward_recording)
+plt.show()

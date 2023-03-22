@@ -1,6 +1,6 @@
 """
 Save util taken from stable_baselines
-used to serialize data (class parameters) of model classes
+used to serialize data.csv.csv (class parameters) of model classes
 """
 import base64
 import functools
@@ -73,13 +73,13 @@ def is_json_serializable(item: Any) -> bool:
 
 def data_to_json(data: Dict[str, Any]) -> str:
     """
-    Turn data (class parameters) into a JSON string for storing
+    Turn data.csv.csv (class parameters) into a JSON string for storing
 
     :param data: (Dict[str, Any]) Dictionary of class parameters to be
         stored. Items that are not JSON serializable will be
         pickled with Cloudpickle and stored as bytearray in
         the JSON file
-    :return: (str) JSON string of the data serialized.
+    :return: (str) JSON string of the data.csv.csv serialized.
     """
     # First, check what elements can not be JSONfied,
     # and turn them into byte-strings
@@ -144,7 +144,7 @@ def json_to_data(json_string: str, custom_objects: Optional[Dict[str, Any]] = No
         raise ValueError("custom_objects argument must be a dict or None")
 
     json_dict = json.loads(json_string)
-    # This will be filled with deserialized data
+    # This will be filled with deserialized data.csv.csv
     return_data = {}
     for data_key, data_item in json_dict.items():
         if custom_objects is not None and data_key in custom_objects.keys():
@@ -300,7 +300,7 @@ def save_to_zip_file(
     """
 
     save_path = open_path(save_path, "w", verbose=0, suffix="zip")
-    # data/params can be None, so do not
+    # data.csv.csv/params can be None, so do not
     # try to serialize them blindly
     if data is not None:
         serialized_data = data_to_json(data)
@@ -309,7 +309,7 @@ def save_to_zip_file(
     with zipfile.ZipFile(save_path, mode="w") as archive:
         # Do not try to save "None" elements
         if data is not None:
-            archive.writestr("data", serialized_data)
+            archive.writestr("data.csv.csv", serialized_data)
         if tensors is not None:
             with archive.open("tensors.pth", mode="w") as tensors_file:
                 th.save(tensors, tensors_file)
@@ -353,10 +353,10 @@ def load_from_zip_file(
     load_path: Union[str, pathlib.Path, io.BufferedIOBase], load_data: bool = True, verbose=0,
 ) -> (Tuple[Optional[Dict[str, Any]], Optional[TensorDict], Optional[TensorDict]]):
     """
-    Load model data from a .zip archive
+    Load model data.csv.csv from a .zip archive
 
     :param load_path: (str, pathlib.Path, io.BufferedIOBase) Where to load the model from
-    :param load_data: Whether we should load and return data
+    :param load_data: Whether we should load and return data.csv.csv
         (class parameters). Mainly used by 'load_parameters' to only load model parameters (weights)
     :return: (dict),(dict),(dict) Class parameters, model state_dicts (dict of state_dict)
         and dict of extra tensors
@@ -366,20 +366,20 @@ def load_from_zip_file(
     # set device to cpu if cuda is not available
     device = get_device()
 
-    # Open the zip archive and load data
+    # Open the zip archive and load data.csv.csv
     try:
         with zipfile.ZipFile(load_path) as archive:
             namelist = archive.namelist()
-            # If data or parameters is not in the
+            # If data.csv.csv or parameters is not in the
             # zip archive, assume they were stored
             # as None (_save_to_file_zip allows this).
             data = None
             tensors = None
             params = {}
 
-            if "data" in namelist and load_data:
+            if "data.csv.csv" in namelist and load_data:
                 # Load class parameters and convert to string
-                json_data = archive.read("data").decode()
+                json_data = archive.read("data.csv.csv").decode()
                 data = json_to_data(json_data)
 
             if "tensors.pth" in namelist and load_data:

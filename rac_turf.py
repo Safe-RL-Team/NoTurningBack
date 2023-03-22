@@ -2,10 +2,12 @@ import math
 import numpy as np
 import os
 import torch
+import pandas as pd
+import matplotlib.pyplot as plt
 
 from reversibility.offline_reversibility import learn_rev_classifier, learn_rev_action
 
-from stable_baselines3_copy import DQN, PPO
+from stable_baselines3_copy import PPO
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3_copy.common.vec_env.vec_safe import VecSafe
 from stable_baselines3_copy.common.vec_env import DummyVecEnv
@@ -18,21 +20,21 @@ seed = 42
 np.random.seed(seed)
 torch.manual_seed(seed)
 
-p_thresh = 0.7
+p_thresh = 0.8
 
 log_dir = "results/turfRAC"
 
-n_traj_classifier = 10 ** 4
-dataset_classifier = 10 ** 2
-epoch_classifier = 10 ** 2
+n_traj_classifier = 10 ** 5
+dataset_classifier = 3e5
+epoch_classifier = 100
 no_cuda = False
 verbose = True
 lr_classifier = 0.01
-steps_action_model = 10 ** 2
-lr_classifier_act = 0.01
+steps_action_model = 10 ** 5
+lr = 0.01
 step_penalty = 0
 ent_coef = 0.05
-time_steps = 10 ** 3
+time_steps = 8e4
 
 os.makedirs(log_dir, exist_ok=True)
 
@@ -52,7 +54,7 @@ if model_act is None:
                                  env_str='turf',
                                  buffer=buffer,
                                  epochs=steps_action_model,
-                                 lr=lr_classifier_act,
+                                 lr=lr,
                                  no_cuda=no_cuda,
                                  verbose=verbose)
     print("Done!")
@@ -80,10 +82,12 @@ model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
 
-# list of total reward per episode (0 or 1)
-print(env.envs[0].all_rewards)
-# list of total spoiled grass per episode
-print(env.envs[0].all_spoiled_grass)
-# array of visits per node
+data = pd.DataFrame({'rewards': env.envs[0].all_rewards, 'spoiled_grass': env.envs[0].all_spoiled_grass})
+data.to_csv(log_dir + '/data.csv')
+
+plt.plot(env.envs[0].all_rewards)
+plt.show()
+plt.plot(env.envs[0].all_spoiled_grass)
+plt.show()
 print(env.envs[0].all_positions)
 

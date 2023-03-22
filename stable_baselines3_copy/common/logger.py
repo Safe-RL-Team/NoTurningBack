@@ -106,7 +106,7 @@ class HumanOutputFormat(KVWriter, SeqWriter):
             key_width = max(map(len, key2str.keys()))
             val_width = max(map(len, key2str.values()))
 
-        # Write out the data
+        # Write out the data.csv.csv
         dashes = "-" * (key_width + val_width + 7)
         lines = [dashes]
         for key, value in key2str.items():
@@ -620,7 +620,7 @@ def read_json(filename: str) -> pandas.DataFrame:
     read a json file using pandas
 
     :param filename: (str) the file path to read
-    :return: (pandas.DataFrame) the data in the json
+    :return: (pandas.DataFrame) the data.csv.csv in the json
     """
     data = []
     with open(filename, "rt") as file_handler:
@@ -634,6 +634,6 @@ def read_csv(filename: str) -> pandas.DataFrame:
     read a csv file using pandas
 
     :param filename: (str) the file path to read
-    :return: (pandas.DataFrame) the data in the csv
+    :return: (pandas.DataFrame) the data.csv.csv in the csv
     """
     return pandas.read_csv(filename, index_col=None, comment="#")

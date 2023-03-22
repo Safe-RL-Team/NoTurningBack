@@ -40,7 +40,7 @@ def learn_rev_classifier(n_traj, env_str='cartpole', w_max=200, dataset_size=10*
         epoch_acc = 0
 
         dataset = buff_to_dataset(buffer, 1, w_max, dataset_size)
-        train_loader = DataLoader(dataset, batch_size=256, shuffle=True)
+        train_loader = DataLoader(dataset, batch_size=128, shuffle=True)
 
         for batch in train_loader:
             obs, labels = batch[0], batch[1]

@@ -2,7 +2,7 @@ import gym
 from gym.utils import seeding
 from gym.spaces.discrete import Discrete
 from gym.spaces import Box
-from .utils import generate_fixed_room
+from .utils import generate_fixed_room, generate_fixed_room_big
 from .render_utils import room_to_tiny_world_rgb
 import numpy as np
 
@@ -18,7 +18,8 @@ class TurfEnv(gym.Env):
                  goal_reward=1,
                  step_penalty=0.1,
                  tiny=True,
-                 fixed=True
+                 fixed=True,
+                 big=False
                  ):
 
         # Penalties and Rewards
@@ -36,9 +37,13 @@ class TurfEnv(gym.Env):
         self.max_steps = max_steps
         self.action_space = Discrete(len(ACTION_LOOKUP))
         self.fixed = fixed
+        self.big = big
 
         if self.fixed:
-            self.grass, self.player_position, self.goal_position = generate_fixed_room()
+            if self.big:
+                self.grass, self.player_position, self.goal_position = generate_fixed_room_big()
+            else:
+                self.grass, self.player_position, self.goal_position = generate_fixed_room()
             dim_room = self.grass.shape
 
             if not self.tiny:
@@ -137,7 +142,10 @@ class TurfEnv(gym.Env):
             render_mode = 'tiny_rgb_array'
 
         if self.fixed:
-            self.grass, self.player_position, self.goal_position = generate_fixed_room()
+            if self.big:
+                self.grass, self.player_position, self.goal_position = generate_fixed_room_big()
+            else:
+                self.grass, self.player_position, self.goal_position = generate_fixed_room()
         else:
             raise NotImplementedError
 

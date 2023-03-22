@@ -130,7 +130,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             warnings.warn(
                 "You passed a positive value for `train_freq` and `n_episodes_rollout`."
                 "Please make sure this is intended. "
-                "The agent will collect data by stepping in the environment "
+                "The agent will collect data.csv.csv by stepping in the environment "
                 "until both conditions are true: "
                 "`number of steps in the env` >= `train_freq` and "
                 "`number of episodes` > `n_episodes_rollout`"
@@ -364,16 +364,16 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         :param env: (VecEnv) The training environment
         :param callback: (BaseCallback) Callback that will be called at each step
             (and at the beginning and end of the rollout)
-        :param n_episodes: (int) Number of episodes to use to collect rollout data
+        :param n_episodes: (int) Number of episodes to use to collect rollout data.csv.csv
             You can also specify a ``n_steps`` instead
-        :param n_steps: (int) Number of steps to use to collect rollout data
+        :param n_steps: (int) Number of steps to use to collect rollout data.csv.csv
             You can also specify a ``n_episodes`` instead.
         :param action_noise: (Optional[ActionNoise]) Action noise that will be used for exploration
             Required for deterministic policy (e.g. TD3). This can also be used
             in addition to the stochastic policy for SAC.
         :param learning_starts: (int) Number of steps before learning for the warm-up phase.
         :param replay_buffer: (ReplayBuffer)
-        :param log_interval: (int) Log data every ``log_interval`` episodes
+        :param log_interval: (int) Log data.csv.csv every ``log_interval`` episodes
         :return: (RolloutReturn)
         """
         episode_rewards, total_timesteps = [], []
@@ -415,7 +415,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
                 # Retrieve reward and episode length if using Monitor wrapper
                 self._update_info_buffer(infos, done)
 
-                # Store data in replay buffer
+                # Store data.csv.csv in replay buffer
                 if replay_buffer is not None:
                     # Store only the unnormalized version
                     if self._vec_normalize_env is not None:

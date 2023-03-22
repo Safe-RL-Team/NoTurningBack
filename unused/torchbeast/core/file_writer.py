@@ -137,19 +137,19 @@ class FileWriter:
         self._logger.info("Saving messages to %s", self.paths["msg"])
         if os.path.exists(self.paths["msg"]):
             self._logger.warning(
-                "Path to message file already exists. " "New data will be appended."
+                "Path to message file already exists. " "New data.csv.csv will be appended."
             )
 
         fhandle = logging.FileHandler(self.paths["msg"])
         fhandle.setFormatter(formatter)
         self._logger.addHandler(fhandle)
 
-        self._logger.info("Saving logs data to %s", self.paths["logs"])
+        self._logger.info("Saving logs data.csv.csv to %s", self.paths["logs"])
         self._logger.info("Saving logs' fields to %s", self.paths["fields"])
         self.fieldnames = ["_tick", "_time"]
         if os.path.exists(self.paths["logs"]):
             self._logger.warning(
-                "Path to log file already exists. " "New data will be appended."
+                "Path to log file already exists. " "New data.csv.csv will be appended."
             )
             # Override default fieldnames.
             with open(self.paths["fields"], "r") as csvfile:
@@ -163,7 +163,7 @@ class FileWriter:
                 lines = list(reader)
                 # Need at least two lines in order to read the last tick:
                 # the first is the csv header and the second is the first line
-                # of data.
+                # of data.csv.csv.
                 if len(lines) > 1:
                     self._tick = int(lines[-1][0]) + 1
 

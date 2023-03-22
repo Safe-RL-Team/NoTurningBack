@@ -13,11 +13,12 @@ class VecSafe(VecEnvWrapper):
     :param threshold: (float) threshold to reject action (the lower the safer)
     """
 
-    def __init__(self, venv, model_rev, threshold=0.9):
+    def __init__(self, venv, model_rev, threshold=0.9, irreversible=False):
 
         VecEnvWrapper.__init__(self, venv)
         self.model = model_rev
         self.threshold = threshold
+        self.irreversible = False
 
         self.current_obs = np.array([])
         self.old_obs = np.array([])
@@ -44,11 +45,15 @@ class VecSafe(VecEnvWrapper):
         actions = np.array(actions)
         with th.no_grad():
             rev_score = self.model(th.from_numpy(self.current_obs).to(self.model.device)).expand(1, -1)
-        irrev_idx = rev_score[:, actions].squeeze(1) > self.threshold
+        if self.irreversible:
+            irrev_idx = rev_score[:, actions].squeeze(1) < self.threshold
+        else:
+            irrev_idx = rev_score[:, actions].squeeze(1) > self.threshold
         if irrev_idx.sum() > 0:
             actions[irrev_idx.cpu().numpy()] = th.argmin(rev_score[irrev_idx], axis=1).cpu().numpy()
         self.real_actions = actions
         self.venv.step_async(actions)
+
 
 if __name__ == "__main__":
     import torch

@@ -111,12 +111,12 @@ class A2C(OnPolicyAlgorithm):
     def train(self) -> None:
         """
         Update policy using the currently gathered
-        rollout buffer (one gradient step over whole data).
+        rollout buffer (one gradient step over whole data.csv.csv).
         """
         # Update optimizer learning rate
         self._update_learning_rate(self.policy.optimizer)
 
-        # This will only loop once (get all data in one go)
+        # This will only loop once (get all data.csv.csv in one go)
         for rollout_data in self.rollout_buffer.get(batch_size=None):
 
             actions = rollout_data.actions
