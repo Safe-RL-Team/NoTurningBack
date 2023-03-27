@@ -79,7 +79,7 @@ model.save(os.path.join(log_dir, 'model.pt'))
 
 data = pd.DataFrame({'rewards': env.all_rewards,
                      'spoiled_grass': env.all_spoiled_grass})
-data.to_csv(log_dir + '/data.csv.csv')
+data.to_csv(log_dir + '/data.csv')
 np.savetxt(log_dir + '/all_positions.txt', env.all_positions, fmt='%d')
 
 plt.plot(env.all_rewards)

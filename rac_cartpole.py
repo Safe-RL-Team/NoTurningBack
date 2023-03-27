@@ -71,10 +71,10 @@ env = DummyVecEnv([lambda: env])
 thresh_csv = {}
 for p_thresh in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
     episodes_length = []
-    if p_thresh < 1:
+    if 0 < p_thresh < 1:
         threshold = math.log(p_thresh / (1 - p_thresh))
     else:
-        threshold = 0
+        threshold = p_thresh
     env = VecSafe(env, model_act, threshold=threshold)
 
     for i in range(5):
@@ -87,6 +87,8 @@ for p_thresh in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
             irrev_idx = rev_score[:, actions].squeeze(1) > threshold
             if irrev_idx.sum() > 0:
                 actions[irrev_idx.cpu().numpy()] = torch.argmin(rev_score[irrev_idx], axis=1).cpu().numpy()
+            else:
+                actions = np.array([torch.argmin(rev_score[0]).cpu().numpy()])
             real_actions = actions
 
             obs, reward, done, info = env.envs[0].step(np.random.choice(real_actions))
@@ -100,14 +102,14 @@ for p_thresh in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
 
 data = pd.DataFrame(thresh_csv)
 data.to_csv(log_dir + '/data.csv')
-
+"""
 thresh_csv = {}
 for p_thresh in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
     episodes_length = []
-    if p_thresh < 1:
+    if 0 < p_thresh < 1:
         threshold = math.log(p_thresh / (1 - p_thresh))
     else:
-        threshold = 0
+        threshold = p_thresh
     env = VecSafe(env, model_act, threshold=threshold)
 
     for i in range(5):
@@ -119,7 +121,7 @@ for p_thresh in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
                 rev_score = model_act(torch.from_numpy(obs).to(model_act.device)).expand(1, -1)
             irrev_idx = rev_score[:, actions].squeeze(1) < threshold
             if irrev_idx.sum() > 0:
-                actions[irrev_idx.cpu().numpy()] = torch.argmin(rev_score[irrev_idx], axis=1).cpu().numpy()
+                actions[irrev_idx.cpu().numpy()] = torch.argmax(rev_score[irrev_idx], axis=1).cpu().numpy()
             real_actions = actions
 
             obs, reward, done, info = env.envs[0].step(np.random.choice(real_actions))
@@ -133,3 +135,4 @@ for p_thresh in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
 
 data = pd.DataFrame(thresh_csv)
 data.to_csv(log_dir + '/reverse_data.csv')
+"""

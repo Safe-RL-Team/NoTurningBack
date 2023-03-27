@@ -74,14 +74,18 @@ env = DummyVecEnv([lambda: env])
 model = PPO('CnnPolicy', env, verbose=1, tensorboard_log=log_dir, clip_range_vf=None, ent_coef=ent_coef)
 
 
-if p_thresh < 1:
+if 0 < p_thresh < 1:
     threshold = math.log(p_thresh / (1 - p_thresh))
-    model.env = VecSafe(model.env, model_act, threshold=threshold)
+else:
+    threshold = p_thresh
+model.env = VecSafe(model.env, model_act, threshold=threshold, irreversible=True)
+
 
 model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
 
+np.savetxt(log_dir + '/all_positions.txt', env.envs[0].all_positions, fmt='%d')
 data = pd.DataFrame({'rewards': env.envs[0].all_rewards, 'spoiled_grass': env.envs[0].all_spoiled_grass})
 data.to_csv(log_dir + '/data.csv')
 
@@ -90,4 +94,3 @@ plt.show()
 plt.plot(env.envs[0].all_spoiled_grass)
 plt.show()
 print(env.envs[0].all_positions)
-

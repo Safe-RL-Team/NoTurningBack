@@ -73,9 +73,11 @@ env = Monitor(env, os.path.join(log_dir, 'exp_{}'.format(seed)))
 env = DummyVecEnv([lambda: env])
 
 
-if p_thresh < 1:
+if 0 < p_thresh < 1:
     threshold = math.log(p_thresh / (1 - p_thresh))
-    env = VecSafe(env, model_act, threshold=threshold, irreversible=False)
+else:
+    threshold = p_thresh
+env = VecSafe(env, model_act, threshold=threshold)
 
 model = PPO('MlpPolicy', env, verbose=1,
             tensorboard_log=log_dir,

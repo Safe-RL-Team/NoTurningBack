@@ -77,10 +77,13 @@ model.learn(total_timesteps=time_steps)
 
 model.save(os.path.join(log_dir, 'model.pt'))
 
-data = pd.DataFrame({'length': env.episode_lengths, 'intrins_rew': model.env.reward_recording})
+length = np.array(model.env.episode_length_recording)
+reward = np.array(model.env.reward_recording).flatten()[:len(length)]
+
+data = pd.DataFrame({'length': length, 'intrins_rew': reward})
 data.to_csv(log_dir + '/data.csv')
 
-plt.plot(env.episode_rewards)
+plt.plot(length)
 plt.show()
-plt.plot(model.env.reward_recording)
+plt.plot(reward)
 plt.show()
